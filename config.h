@@ -48,21 +48,20 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "[M]",      monocle },
-	{ "[@]",      spiral },
-	{ "[\\]",     dwindle },
-	{ "H[]",      deck },
-	{ "TTT",      bstack },
-	{ "===",      bstackhoriz },
-	{ "HHH",      grid },
-	{ "###",      nrowgrid },
-	{ "---",      horizgrid },
-	{ ":::",      gaplessgrid },
-	{ "|M|",      centeredmaster },
-	{ ">M>",      centeredfloatingmaster },
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ NULL,       NULL },
+	{ "[]=",	tile },			// Default: Master on left, slaves on right
+	{ "TTT",	bstack },		// Master on top, slaves on bottom
+
+	{ "[@]",	spiral },		// Fibonacci spiral
+	{ "[\\]",	dwindle },		// Decreasing in size right and leftward
+
+	{ "[D]",	deck },			// Master on left, slaves in monocle-like mode on right
+	{ "[M]",	monocle },		// All windows on top of eachother
+
+	{ "|M|",	centeredmaster },		// Master in middle, slaves on sides
+	{ ">M>",	centeredfloatingmaster },	// Same but master floats
+
+	{ "><>",	NULL },			/* no layout function means floating behavior */
+	{ NULL,		NULL },
 };
 
 /* key definitions */
@@ -85,13 +84,33 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 
 	// Custom bindings
-  { MODKEY|ShiftMask,             XF86XK_Eject,      spawn,          SHCMD("poweroff") },
-  { MODKEY,                       XF86XK_Eject,      spawn,          SHCMD("reboot") },
-  { 0,                            XF86XK_Eject,      spawn,          SHCMD("light-locker-command -l") },
-	{ MODKEY,                       XK_q,              killclient,           {0} },
-	{ MODKEY|ShiftMask,             XK_q,              quit,           {0} },
+  { MODKEY|ShiftMask,             XF86XK_Eject,      spawn,         SHCMD("poweroff") },
+  { MODKEY,                       XF86XK_Eject,      spawn,         SHCMD("reboot") },
+  { 0,                            XF86XK_Eject,      spawn,         SHCMD("light-locker-command -l") },
+	{ MODKEY,                       XK_q,              killclient,    {0} },
+	{ MODKEY|ShiftMask,             XK_q,              quit,          {0} },
+
+  // Default
+  { MODKEY,			                  XK_o,		incnmaster,     {.i = +1 } },
+	{ MODKEY|ShiftMask,		          XK_o,		incnmaster,     {.i = -1 } },
+
+  // Layouts
+  { MODKEY,			                  XK_t,		setlayout,	{.v = &layouts[0]} }, // tile
+	{ MODKEY|ShiftMask,		          XK_t,		setlayout,	{.v = &layouts[1]} }, // bstack
+	{ MODKEY,			                  XK_y,		setlayout,	{.v = &layouts[2]} }, // spiral
+	{ MODKEY|ShiftMask,		          XK_y,		setlayout,	{.v = &layouts[3]} }, // dwindle
+	{ MODKEY,			                  XK_u,		setlayout,	{.v = &layouts[4]} }, // deck
+	{ MODKEY|ShiftMask,		          XK_u,		setlayout,	{.v = &layouts[5]} }, // monocle
+	{ MODKEY,			                  XK_i,		setlayout,	{.v = &layouts[6]} }, // centeredmaster
+	{ MODKEY|ShiftMask,		          XK_i,		setlayout,	{.v = &layouts[7]} }, // centeredfloatingmaster
 
   // Vanity gaps
+  { MODKEY,			                  XK_a,		togglegaps,	  {0} },
+	{ MODKEY|ShiftMask,		          XK_a,		defaultgaps,	{0} },
+  { MODKEY,			                  XK_z,		incrgaps,     {.i = +3 } },
+	{ MODKEY|ShiftMask,			        XK_z,		incrgaps,	    {.i = -3 } },
+  /*
+  // Default key bindings
 	{ MODKEY|Mod4Mask,              XK_u,      incrgaps,       {.i = +1 } },
 	{ MODKEY|Mod4Mask|ShiftMask,    XK_u,      incrgaps,       {.i = -1 } },
 	{ MODKEY|Mod4Mask,              XK_i,      incrigaps,      {.i = +1 } },
@@ -108,6 +127,7 @@ static Key keys[] = {
 	{ MODKEY|Mod4Mask|ShiftMask,    XK_9,      incrovgaps,     {.i = -1 } },
 	{ MODKEY|Mod4Mask,              XK_0,      togglegaps,     {0} },
   { MODKEY|Mod4Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
+  */
 
   //
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
@@ -115,8 +135,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
