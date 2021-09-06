@@ -2,6 +2,10 @@
 
 #include <X11/XF86keysym.h>
 
+
+/* settings */
+static const unsigned int stdout_buffer = 0; /* disable buffering for stdout */
+
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
@@ -24,6 +28,7 @@ static const char *colors[][3]      = {
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
 
+
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
@@ -32,9 +37,15 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	//{ "Gimp",     "gimp",       NULL,       1 << 5,            0,           -1 },
-	{ "firefox",  NULL,       NULL,       1 << 1,       0,           -1 },
+	 /* check logs to confirm the class, instance, and title of the windows being opened */
+
+	/* class      					instance    title       tags mask     isfloating   monitor */
+	{ "firefox",  					NULL,       NULL,       1 << 0,    		0,           -1 },
+	{ "Code",  							NULL,       NULL,       1 << 1,    		0,           -1 },
+	{ "Standard Notes",  		NULL,       NULL,       1 << 4,    		0,           -1 },
+	{ "Slack",  						NULL,       NULL,       1 << 7,    		0,           -1 },
+	{ "Google-chrome",  		NULL,       NULL,       1 << 8,    		0,           -1 },
+
 };
 
 /* layout(s) */
@@ -81,9 +92,9 @@ static Key keys[] = {
 	/* modifier                     key        function        argument */
 
 	// Custom bindings
-  { MODKEY|ShiftMask,             XF86XK_Eject,      spawn,         SHCMD("poweroff") },
-  { MODKEY,                       XF86XK_Eject,      spawn,         SHCMD("reboot") },
-  { 0,                            XF86XK_Eject,      spawn,         SHCMD("light-locker-command -l") },
+  { MODKEY|ShiftMask,             XK_Pause,      spawn,         SHCMD("poweroff") },
+  { MODKEY,                       XK_Pause,      spawn,         SHCMD("reboot") },
+  { 0,                            XK_Pause,      spawn,         SHCMD("light-locker-command -l") },
 	{ MODKEY,                       XK_q,              killclient,    {0} },
 	{ MODKEY|ShiftMask,             XK_q,              quit,          {0} },
 
